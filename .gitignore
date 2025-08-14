@@ -68,3 +68,17 @@ temp/
 # Company-specific
 internal/
 private/
+
+# log files (root only)
+packages/agent-client/logs/*
+packages/api-server/logs/*
+benchmarks/results/*
+packages/agent-client/src/reference/temp*
+packages/agent-client/debug
+packages/agent-client/config/config.json
+packages/agent-client/onboarding-results
+packages/mcp-server/src/reference/data
+packages/api-server/onboarding-results
+
+# Session workspaces
+sessions/
