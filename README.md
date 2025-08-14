@@ -10,7 +10,7 @@
   <p>
     <a href="https://github.com/acho-dev/aden/stargazers"><img src="https://img.shields.io/github/stars/adenhq/aden-mcp?style=social" alt="GitHub stars"></a>
     <a href="https://github.com/acho-dev/aden/network/members"><img src="https://img.shields.io/github/forks/adenhq/aden-mcp?style=social" alt="GitHub forks"></a>
-    <a href="https://adenhq.com/docs"><img src="https://img.shields.io/badge/docs-adenhq.com-blue" alt="Documentation"></a>
+    <a href="https://docs.adenhq.com/"><img src="https://img.shields.io/badge/docs-adenhq.com-blue" alt="Documentation"></a>
     <a href="https://discord.gg/HqSUFbKkfk"><img src="https://img.shields.io/discord/123456789?label=Discord&logo=discord" alt="Discord"></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="License"></a>
   </p>
