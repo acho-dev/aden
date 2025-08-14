@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://adenhq.com">
-    <img src="https://adenhq.com/logo.svg" alt="Aden Logo" width="120" />
+    <img src="https://asset.acho.io/aden-website-assets/aden-logo.svg" alt="Aden Logo" width="120" />
   </a>
   
   <h1>Aden MCP Analytics Framework</h1>
@@ -8,10 +8,10 @@
   <p><strong>Deep Database Intelligence via Model Context Protocol</strong></p>
   
   <p>
-    <a href="https://github.com/adenhq/aden-mcp/stargazers"><img src="https://img.shields.io/github/stars/adenhq/aden-mcp?style=social" alt="GitHub stars"></a>
-    <a href="https://github.com/adenhq/aden-mcp/network/members"><img src="https://img.shields.io/github/forks/adenhq/aden-mcp?style=social" alt="GitHub forks"></a>
+    <a href="https://github.com/acho-dev/aden/stargazers"><img src="https://img.shields.io/github/stars/adenhq/aden-mcp?style=social" alt="GitHub stars"></a>
+    <a href="https://github.com/acho-dev/aden/network/members"><img src="https://img.shields.io/github/forks/adenhq/aden-mcp?style=social" alt="GitHub forks"></a>
     <a href="https://adenhq.com/docs"><img src="https://img.shields.io/badge/docs-adenhq.com-blue" alt="Documentation"></a>
-    <a href="https://discord.gg/aden"><img src="https://img.shields.io/discord/123456789?label=Discord&logo=discord" alt="Discord"></a>
+    <a href="https://discord.gg/HqSUFbKkfk"><img src="https://img.shields.io/discord/123456789?label=Discord&logo=discord" alt="Discord"></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="License"></a>
   </p>
   
@@ -529,7 +529,7 @@ node test/test-goal-aware-task-generation.js
   
   [![Discord](https://img.shields.io/badge/Discord-Join%20Chat-7289DA?logo=discord&logoColor=white)](https://discord.gg/aden)
   [![Twitter](https://img.shields.io/badge/Twitter-Follow-1DA1F2?logo=twitter&logoColor=white)](https://twitter.com/adenhq)
-  [![GitHub Discussions](https://img.shields.io/badge/GitHub-Discussions-333?logo=github&logoColor=white)](https://github.com/adenhq/aden-mcp/discussions)
+  [![GitHub Discussions](https://img.shields.io/badge/GitHub-Discussions-333?logo=github&logoColor=white)](https://github.com/acho-dev/aden/discussions)
 </div>
 
 We welcome contributions from developers worldwide! The Aden MCP Analytics Framework is a community-driven project, and we're excited to see what you'll build.
@@ -564,7 +564,7 @@ git push origin feature/your-amazing-feature
 
 ### Code of Conduct
 
-We follow the [Aden Community Code of Conduct](https://github.com/adenhq/aden-mcp/blob/main/CODE_OF_CONDUCT.md). Please be respectful and inclusive in all interactions.
+We follow the [Aden Community Code of Conduct](https://github.com/acho-dev/aden/blob/main/CODE_OF_CONDUCT.md). Please be respectful and inclusive in all interactions.
 
 ## 🗺️ Roadmap
 
@@ -591,13 +591,13 @@ We're building the future of conversational analytics together! Here's what's co
 - [ ] Voice interface support
 - [ ] Multi-language support (Spanish, Chinese, Japanese)
 
-**Have ideas?** [Open a discussion](https://github.com/adenhq/aden-mcp/discussions) or vote on existing proposals!
+**Have ideas?** [Open a discussion](https://github.com/acho-dev/aden/discussions) or vote on existing proposals!
 
 ## 📚 Resources & Documentation
 
 - **[Official Documentation](https://adenhq.com/docs/mcp-analytics)** - Comprehensive guides and API reference
 - **[Tutorial Series](https://adenhq.com/tutorials)** - Step-by-step tutorials for common use cases
-- **[Example Projects](https://github.com/adenhq/aden-mcp-examples)** - Sample implementations and templates
+- **[Example Projects](https://github.com/acho-dev/aden-examples)** - Sample implementations and templates
 - **[Video Demos](https://youtube.com/@adenhq)** - Watch the framework in action
 - **[Blog](https://adenhq.com/blog)** - Technical articles and best practices
 
