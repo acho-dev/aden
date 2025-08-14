@@ -8,8 +8,8 @@
   <p><strong>Deep Database Intelligence via Model Context Protocol</strong></p>
   
   <p>
-    <a href="https://github.com/acho-dev/aden/stargazers"><img src="https://img.shields.io/github/stars/adenhq/aden-mcp?style=social" alt="GitHub stars"></a>
-    <a href="https://github.com/acho-dev/aden/network/members"><img src="https://img.shields.io/github/forks/adenhq/aden-mcp?style=social" alt="GitHub forks"></a>
+    <a href="https://github.com/acho-dev/aden/stargazers"><img src="https://img.shields.io/github/stars/acho-dev/aden?style=social" alt="GitHub stars"></a>
+    <a href="https://github.com/acho-dev/aden/network/members"><img src="https://img.shields.io/github/forks/acho-dev/aden?style=social" alt="GitHub forks"></a>
     <a href="https://docs.adenhq.com/"><img src="https://img.shields.io/badge/docs-adenhq.com-blue" alt="Documentation"></a>
     <a href="https://discord.gg/HqSUFbKkfk"><img src="https://img.shields.io/discord/123456789?label=Discord&logo=discord" alt="Discord"></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="License"></a>
@@ -121,7 +121,7 @@ First analytics platform built entirely on the Model Context Protocol, enabling 
 ## 🚀 Quick Start
 
 > **🏗️ Built by the Community, Powered by Aden**  
-> This project is maintained by the Aden developer community. Join us on [Discord](https://discord.gg/aden) to contribute!
+> This project is maintained by the Aden developer community. Join us on [Discord](https://discord.gg/HqSUFbKkfk) to contribute!
 
 ### Installation
 
@@ -137,8 +137,8 @@ First analytics platform built entirely on the Model Context Protocol, enabling 
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/aden-mcp-agent.git
-cd aden-mcp-agent
+git clone https://github.com/acho-dev/aden.git
+cd aden
 ```
 
 2. Install dependencies:
@@ -479,6 +479,7 @@ graph TD
 <td width="50%" valign="top">
 
 ### 🧠 **Intelligent Analytics Subagent**
+
 <sub>The brain behind natural language analytics</sub>
 
 ```
@@ -500,6 +501,7 @@ graph TD
 ```
 
 **Key Capabilities:**
+
 - Auto-detects analytics queries
 - Generates production-ready SQL
 - Orchestrates multi-tool workflows
@@ -509,6 +511,7 @@ graph TD
 <td width="50%" valign="top">
 
 ### ⚡ **Multi-Agent Decision Executor**
+
 <sub>High-performance query orchestration</sub>
 
 ```
@@ -531,6 +534,7 @@ graph TD
 ```
 
 **Performance Features:**
+
 - 70% latency reduction
 - Smart query routing
 - Connection pooling
@@ -542,6 +546,7 @@ graph TD
 <td width="50%" valign="top">
 
 ### 🗺️ **Neo4j Schema Intelligence**
+
 <sub>Real-time database structure discovery</sub>
 
 ```
@@ -565,6 +570,7 @@ graph TD
 ```
 
 **Smart Features:**
+
 - Live schema updates
 - Relationship inference
 - Metadata enrichment
@@ -574,6 +580,7 @@ graph TD
 <td width="50%" valign="top">
 
 ### 🛠️ **MCP Database Tools Suite**
+
 <sub>Unified interface for all data sources</sub>
 
 ```
@@ -597,6 +604,7 @@ graph TD
 ```
 
 **Tool Highlights:**
+
 - Parameterized queries
 - Transaction support
 - Bulk operations
@@ -617,20 +625,20 @@ graph LR
         QP --> QE[Query Executor]
         QE --> RS[Result Synthesizer]
     end
-    
+
     subgraph "Data Layer"
         QE --> PG[(PostgreSQL)]
         QE --> DD[(DuckDB)]
         QE --> N4J[(Neo4j)]
         QE --> MDB[(MongoDB)]
     end
-    
+
     subgraph "Knowledge Layer"
         IA --> KG[Knowledge Graph]
         RS --> KG
         KG --> Memory[(Team Memory)]
     end
-    
+
     style NLQ fill:#e1f5fe
     style IA fill:#fff3e0
     style RS fill:#f3e5f5
@@ -654,7 +662,7 @@ node test/test-goal-aware-task-generation.js
 <div align="center">
   <strong>Join the Aden Developer Community!</strong>
   
-  [![Discord](https://img.shields.io/badge/Discord-Join%20Chat-7289DA?logo=discord&logoColor=white)](https://discord.gg/aden)
+  [![Discord](https://img.shields.io/badge/Discord-Join%20Chat-7289DA?logo=discord&logoColor=white)](https://discord.gg/HqSUFbKkfk)
   [![Twitter](https://img.shields.io/badge/Twitter-Follow-1DA1F2?logo=twitter&logoColor=white)](https://twitter.com/adenhq)
   [![GitHub Discussions](https://img.shields.io/badge/GitHub-Discussions-333?logo=github&logoColor=white)](https://github.com/acho-dev/aden/discussions)
 </div>
@@ -673,8 +681,8 @@ We welcome contributions from developers worldwide! The Aden MCP Analytics Frame
 
 ```bash
 # Fork and clone the repository
-git clone https://github.com/YOUR_USERNAME/aden-mcp.git
-cd aden-mcp
+git clone https://github.com/YOUR_USERNAME/aden.git
+cd aden
 
 # Create a feature branch
 git checkout -b feature/your-amazing-feature
@@ -724,7 +732,7 @@ We're building the future of conversational analytics together! Here's what's co
 
 - **[Official Documentation](https://adenhq.com/docs/mcp-analytics)** - Comprehensive guides and API reference
 - **[Tutorial Series](https://adenhq.com/tutorials)** - Step-by-step tutorials for common use cases
-- **[Example Projects](https://github.com/acho-dev/aden-examples)** - Sample implementations and templates
+- **[Example Projects](https://github.com/acho-dev/aden/tree/main/examples)** - Sample implementations and templates
 - **[Video Demos](https://youtube.com/@adenhq)** - Watch the framework in action
 - **[Blog](https://adenhq.com/blog)** - Technical articles and best practices
 
