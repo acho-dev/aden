@@ -1,0 +1,56 @@
+{
+  "name": "aden",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Aden - Multi-agent system with MCP server, agent client, and API",
+  "type": "module",
+  "workspaces": [
+    "packages/mcp-server",
+    "packages/agent-client",
+    "packages/api-server",
+    "packages/shared"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspaces",
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "start:server": "npm run start --workspace=packages/mcp-server",
+    "start:client": "npm run start --workspace=packages/agent-client",
+    "start:api": "npm run start --workspace=packages/api-server",
+    "start:api-full": "npm run start:server & npm run start:api",
+    "auth:client": "npm run auth --workspace=packages/agent-client",
+    "install:all": "npm install",
+    "clean": "npm run clean --workspaces --if-present && rm -rf node_modules",
+    "lint": "npm run lint --workspaces --if-present",
+    "format": "prettier --write \"packages/**/*.{js,json,md}\"",
+    "version:patch": "npm version patch --workspaces",
+    "version:minor": "npm version minor --workspaces",
+    "version:major": "npm version major --workspaces"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "eslint": "^8.50.0",
+    "eslint-config-prettier": "^9.0.0",
+    "prettier": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/aden.git"
+  },
+  "keywords": [
+    "mcp",
+    "ai",
+    "multi-agent",
+    "monorepo"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "duckdb": "^1.3.2",
+    "express": "^5.1.0"
+  }
+}

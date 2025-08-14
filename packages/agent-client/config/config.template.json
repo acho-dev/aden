@@ -1,0 +1,92 @@
+{
+  "llm": {
+    "provider": "claude",
+    "claude": {
+      "apiKey": "",
+      "model": "claude-3-5-sonnet-20241022",
+      "maxTokens": 4000,
+      "temperature": 0.7
+    },
+    "openai": {
+      "apiKey": "",
+      "model": "gpt-4o",
+      "maxTokens": 4000,
+      "temperature": 0.7
+    },
+    "gemini": {
+      "apiKey": "",
+      "model": "gemini-2.5-pro",
+      "maxTokens": 8192,
+      "temperature": 0.7
+    },
+    "mistral": {
+      "apiKey": "",
+      "model": "mistral-large-latest",
+      "maxTokens": 4000,
+      "temperature": 0.7
+    }
+  },
+  "mcp": {
+    "serverPath": "../mcp-server/src/index.js",
+    "timeout": 60000
+  },
+  "auth": {
+    "jwtToken": "",
+    "adenHost": "https://your-api-host.com"
+  },
+  "cli": {
+    "prompt": "aden> ",
+    "historySize": 100,
+    "autoSave": true,
+    "colorOutput": true
+  },
+  "logging": {
+    "level": "info",
+    "file": false,
+    "console": true
+  },
+  "conversationLogging": {
+    "enabled": true,
+    "logDir": "./logs",
+    "maxLogFileSize": 10485760,
+    "maxLogFiles": 50,
+    "logToolCalls": true,
+    "logRawPrompts": true,
+    "logResponses": true
+  },
+  "htmlReporting": {
+    "enabled": true,
+    "outputDir": "./logs/html",
+    "autoGenerate": true,
+    "theme": "modern",
+    "includeRawPrompts": true,
+    "includeToolDetails": true,
+    "autoOpen": false
+  },
+  "agent": {
+    "execution": {
+      "maxIterations": 10,
+      "maxReplans": 3,
+      "maxTasks": 15,
+      "consecutiveNoProgressThreshold": 3,
+      "maxToolCallsPerIteration": 25,
+      "warningThresholdToolCalls": 20
+    },
+    "retry": {
+      "maxValidationRetries": 3,
+      "maxFastOptimizerRetries": 2
+    },
+    "limits": {
+      "maxContentLength": 15000,
+      "memorySearchLimit": 5,
+      "recentHistoryLimit": 10,
+      "recentInteractionLimit": 5
+    },
+    "timeouts": {
+      "forceExitTimeout": 15000,
+      "mcpToolTimeout": 15000,
+      "apiTimeout": 20000,
+      "groqDefaultTimeout": 10000
+    }
+  }
+}

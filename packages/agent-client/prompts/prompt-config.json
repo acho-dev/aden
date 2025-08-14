@@ -1,0 +1,63 @@
+{
+  "version": "1.0.0",
+  "description": "Prompt configuration for the Aden MCP multi-agent system",
+  "settings": {
+    "cacheTTL": 300000,
+    "enableHotReload": true,
+    "defaultFormat": "markdown"
+  },
+  "prompts": {
+    "agents": {
+      "planner": {
+        "file": "agents/planner.md",
+        "variables": {
+          "required": ["schemaContext"],
+          "optional": ["conversationHistory", "availableTools", "ragContext"],
+          "conditional": ["hasBusinessContext", "hasDataOnboarding", "hasCodeGeneration"]
+        }
+      },
+      "executor": {
+        "file": "agents/executor.md",
+        "variables": {
+          "required": ["task"],
+          "optional": ["schemaContext", "ragContext", "conversationHistory", "previousResults"],
+          "conditional": ["hasDatabaseTasks"]
+        }
+      },
+      "analyzer": {
+        "file": "agents/analyzer.md",
+        "variables": {
+          "required": ["originalMessage"],
+          "optional": ["conversationHistory", "executionResults", "keyInsights", "recommendations"],
+          "conditional": ["hasFormattedContent"]
+        }
+      }
+    },
+    "tasks": {
+      "intent-analysis": {
+        "file": "tasks/intent-analysis.md",
+        "variables": {
+          "required": ["message"],
+          "optional": [],
+          "conditional": ["hasDatabase", "hasFiles", "hasExternal"]
+        }
+      },
+      "plan-generation": {
+        "file": "tasks/plan-generation.md",
+        "variables": {
+          "required": ["message", "intentAnalysis"],
+          "optional": ["conversationHistory", "memoryContext", "availableTools"],
+          "conditional": ["isReplanning"]
+        }
+      }
+    }
+  },
+  "templates": {
+    "variablePrefix": "{{",
+    "variableSuffix": "}}",
+    "conditionalStart": "{{#if",
+    "conditionalEnd": "{{/if}}",
+    "loopStart": "{{#each",
+    "loopEnd": "{{/each}}"
+  }
+}

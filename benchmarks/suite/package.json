@@ -1,0 +1,31 @@
+{
+  "name": "aden-benchmark-suite",
+  "version": "1.0.0",
+  "description": "Automated benchmarking suite for schema enhancement testing",
+  "type": "module",
+  "main": "benchmark-runner.js",
+  "scripts": {
+    "benchmark": "node benchmark-runner.js",
+    "analyze": "node result-analyzer.js ../results",
+    "compare-schemas": "node schema-differ.js",
+    "quick-test": "node benchmark-runner.js --shots=1",
+    "full-test": "node benchmark-runner.js --shots=5",
+    "generate-report": "node generate-report.js"
+  },
+  "bin": {
+    "aden-benchmark": "./benchmark-runner.js",
+    "aden-analyze": "./result-analyzer.js",
+    "aden-schema-diff": "./schema-differ.js",
+    "aden-report": "./generate-report.js"
+  },
+  "keywords": [
+    "benchmarking",
+    "schema",
+    "testing",
+    "performance",
+    "aden",
+    "mcp"
+  ],
+  "author": "Aden Team",
+  "license": "MIT"
+}

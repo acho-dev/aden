@@ -1,0 +1,119 @@
+{
+  "providers": {
+    "aden": {
+      "scheme": "aden",
+      "name": "Aden Assets",
+      "description": "Aden platform uploaded assets storage",
+      "enabled": true,
+      "config": {
+        "requiresAuth": true,
+        "authType": "jwt",
+        "authEnvVar": "ADEN_API_TOKEN",
+        "hostEnvVar": "ADEN_HOST",
+        "defaultHost": "https://your-api-host.com",
+        "endpoints": {
+          "download": "/uploaded/file/download",
+          "list": "/uploaded/file/list",
+          "metadata": "/uploaded/file/get"
+        }
+      },
+      "supportedFormats": ["*"],
+      "maxFileSize": 5368709120,
+      "features": {
+        "streaming": true,
+        "metadata": true,
+        "versioning": false,
+        "publicAccess": false
+      }
+    },
+    "gcs": {
+      "scheme": "gcs",
+      "name": "Google Cloud Storage",
+      "description": "Google Cloud Storage buckets",
+      "enabled": false,
+      "config": {
+        "requiresAuth": true,
+        "authType": "service_account",
+        "authEnvVar": "GOOGLE_APPLICATION_CREDENTIALS",
+        "projectIdEnvVar": "GCP_PROJECT_ID"
+      },
+      "supportedFormats": ["*"],
+      "maxFileSize": 5497558138880,
+      "features": {
+        "streaming": true,
+        "metadata": true,
+        "versioning": true,
+        "publicAccess": true
+      }
+    },
+    "s3": {
+      "scheme": "s3",
+      "name": "Amazon S3",
+      "description": "Amazon S3 buckets",
+      "enabled": false,
+      "config": {
+        "requiresAuth": true,
+        "authType": "aws_credentials",
+        "authEnvVar": "AWS_ACCESS_KEY_ID",
+        "secretEnvVar": "AWS_SECRET_ACCESS_KEY",
+        "regionEnvVar": "AWS_REGION",
+        "defaultRegion": "us-east-1"
+      },
+      "supportedFormats": ["*"],
+      "maxFileSize": 5497558138880,
+      "features": {
+        "streaming": true,
+        "metadata": true,
+        "versioning": true,
+        "publicAccess": true
+      }
+    },
+    "local": {
+      "scheme": "file",
+      "name": "Local Filesystem",
+      "description": "Local file system access",
+      "enabled": true,
+      "config": {
+        "requiresAuth": false,
+        "basePath": "./",
+        "allowedPaths": ["./data", "./uploads", "./temp"]
+      },
+      "supportedFormats": ["*"],
+      "maxFileSize": 10737418240,
+      "features": {
+        "streaming": true,
+        "metadata": true,
+        "versioning": false,
+        "publicAccess": false
+      }
+    },
+    "http": {
+      "scheme": "http",
+      "name": "HTTP/HTTPS",
+      "description": "Download files from HTTP/HTTPS URLs",
+      "enabled": true,
+      "config": {
+        "requiresAuth": false,
+        "timeout": 300000,
+        "maxRedirects": 5,
+        "userAgent": "Aden-MCP-FileDownloader/1.0"
+      },
+      "supportedFormats": ["*"],
+      "maxFileSize": 1073741824,
+      "features": {
+        "streaming": true,
+        "metadata": false,
+        "versioning": false,
+        "publicAccess": true
+      }
+    }
+  },
+  "defaultProvider": "aden",
+  "uriPatterns": {
+    "aden": "aden://[path]",
+    "gcs": "gcs://[bucket]/[path]",
+    "s3": "s3://[bucket]/[path]",
+    "local": "file://[absolute_path]",
+    "http": "http[s]://[domain]/[path]"
+  }
+}

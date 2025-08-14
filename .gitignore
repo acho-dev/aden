@@ -73,6 +73,8 @@ private/
 packages/agent-client/logs/*
 packages/api-server/logs/*
 benchmarks/results/*
+packages/agent-client/.env.dev
+packages/agent-client/.env.prod
 packages/agent-client/src/reference/temp*
 packages/agent-client/debug
 packages/agent-client/config/config.json

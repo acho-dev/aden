@@ -1,0 +1,35 @@
+{
+  "name": "@aden/mcp-server",
+  "version": "1.0.0",
+  "description": "A basic MCP server with sequential thinking, task planning, and tool utilization capabilities",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "node test/test.js"
+  },
+  "keywords": [
+    "mcp",
+    "server",
+    "ai",
+    "tools",
+    "task-planning"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@acho-inc/acho-js": "^1.9.3",
+    "@modelcontextprotocol/sdk": "^0.5.0",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.6.1",
+    "jsdom": "^26.1.0",
+    "mem0ai": "^1.0.39",
+    "mermaid": "^11.8.1",
+    "neo4j-driver": "^5.15.0",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0"
+  }
+}

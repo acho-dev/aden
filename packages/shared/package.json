@@ -1,0 +1,25 @@
+{
+  "name": "@aden/shared",
+  "version": "1.0.0",
+  "description": "Shared utilities for Aden multi-agent system",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./utils": "./src/utils/index.js",
+    "./types": "./src/types/index.js",
+    "./constants": "./src/constants/index.js",
+    "./prompts": "./src/prompts/index.js"
+  },
+  "scripts": {
+    "build": "echo 'Shared package built'",
+    "test": "echo 'Shared package tests would run here'"
+  },
+  "keywords": [
+    "aden",
+    "shared",
+    "utilities"
+  ],
+  "author": "",
+  "license": "MIT"
+}

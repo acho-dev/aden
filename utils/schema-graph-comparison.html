@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Schema Graph Comparison: Original vs Consolidated</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f8f9fa;
+      }
+
+      .container {
+        max-width: 1800px;
+        margin: 0 auto;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .header h1 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+      }
+
+      .header .subtitle {
+        color: #7f8c8d;
+        font-size: 16px;
+      }
+
+      .graphs-container {
+        display: flex;
+        gap: 20px;
+        justify-content: space-between;
+      }
+
+      .graph-panel {
+        flex: 1;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .graph-header {
+        background: #34495e;
+        color: white;
+        padding: 15px 20px;
+        font-weight: 600;
+      }
+
+      .graph-stats {
+        background: #ecf0f1;
+        padding: 10px 20px;
+        font-size: 14px;
+        color: #2c3e50;
+        border-bottom: 1px solid #bdc3c7;
+      }
+
+      .graph-svg {
+        background: white;
+      }
+
+      .controls {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+
+      .controls h3 {
+        margin-top: 0;
+        color: #2c3e50;
+      }
+
+      .control-group {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .control-group label {
+        font-weight: 500;
+        color: #34495e;
+      }
+
+      .control-group input,
+      .control-group select {
+        padding: 5px 10px;
+        border: 1px solid #bdc3c7;
+        border-radius: 4px;
+      }
+
+      .legend {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+
+      .legend h3 {
+        margin-top: 0;
+        color: #2c3e50;
+      }
+
+      .legend-items {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .legend-color {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+      }
+
+      .difference-summary {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+
+      .difference-summary h3 {
+        margin-top: 0;
+        color: #2c3e50;
+      }
+
+      .diff-item {
+        margin-bottom: 10px;
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+
+      .diff-added {
+        background: #d4edda;
+        border-left: 4px solid #28a745;
+      }
+
+      .diff-removed {
+        background: #f8d7da;
+        border-left: 4px solid #dc3545;
+      }
+
+      /* D3 Graph Styles */
+      .node {
+        cursor: pointer;
+        stroke-width: 1.5px;
+      }
+
+      .node.entity {
+        fill: #3498db;
+        stroke: #2980b9;
+      }
+
+      .node.property {
+        fill: #2ecc71;
+        stroke: #27ae60;
+      }
+
+      .node.knowledge {
+        fill: #e74c3c;
+        stroke: #c0392b;
+      }
+
+      .node.highlighted {
+        stroke-width: 3px;
+        stroke: #f39c12;
+      }
+
+      .link {
+        stroke: #95a5a6;
+        stroke-width: 1;
+        fill: none;
+      }
+
+      .link.has-property {
+        stroke: #bdc3c7;
+      }
+
+      .link.related-to {
+        stroke: #e67e22;
+        stroke-width: 2;
+      }
+
+      .link.correlate {
+        stroke: #9b59b6;
+        stroke-width: 2;
+      }
+
+      .node-label {
+        font-size: 10px;
+        text-anchor: middle;
+        fill: #2c3e50;
+        pointer-events: none;
+      }
+
+      .tooltip {
+        position: absolute;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-size: 12px;
+        pointer-events: none;
+        z-index: 1000;
+        max-width: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Schema Graph Comparison</h1>
+        <div class="subtitle">
+          Side-by-side visualization of Original vs Consolidated schema graphs
+        </div>
+      </div>
+
+      <div class="controls">
+        <h3>Visualization Controls</h3>
+        <div style="background: #e8f4fd; padding: 10px; border-radius: 4px; margin-bottom: 15px; font-size: 14px;">
+          💡 <strong>Navigation Tips:</strong> 
+          • Mouse wheel to zoom in/out 
+          • Click and drag to pan around 
+          • Start with "Entities Only" filter for better overview
+          • Drag nodes to explore connections
+        </div>
+        <div class="control-group">
+          <label>Node Size:</label>
+          <input type="range" id="nodeSize" value="8" min="4" max="20" step="1" />
+          <span id="nodeSizeValue">8</span>
+        </div>
+        <div class="control-group">
+          <label>Link Distance:</label>
+          <input type="range" id="linkDistance" value="20" min="10" max="100" step="5" />
+          <span id="linkDistanceValue">20</span>
+        </div>
+        <div class="control-group">
+          <label>Show Labels:</label>
+          <input type="checkbox" id="showLabels" checked />
+        </div>
+        <div class="control-group">
+          <label>Filter Node Type:</label>
+          <select id="nodeFilter">
+            <option value="all">All Nodes (500+)</option>
+            <option value="Entity">Entities Only (~50)</option>
+            <option value="Property">Properties Only (~450)</option>
+            <option value="Knowledge">Knowledge Only (~10)</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label>Charge Strength:</label>
+          <input type="range" id="chargeStrength" value="-50" min="-200" max="-10" step="10">
+          <span id="chargeStrengthValue">-50</span>
+        </div>
+        <div class="control-group">
+          <label>Collision Radius:</label>
+          <input type="range" id="collisionRadius" value="10" min="5" max="30" step="2">
+          <span id="collisionRadiusValue">10</span>
+        </div>
+      </div>
+
+      <div class="legend">
+        <h3>Legend</h3>
+        <div class="legend-items">
+          <div class="legend-item">
+            <div class="legend-color" style="background: #3498db"></div>
+            <span>Entity</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: #2ecc71"></div>
+            <span>Property</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: #e74c3c"></div>
+            <span>Knowledge</span>
+          </div>
+          <div class="legend-item">
+            <div style="width: 20px; height: 2px; background: #bdc3c7"></div>
+            <span>HAS_PROPERTY</span>
+          </div>
+          <div class="legend-item">
+            <div style="width: 20px; height: 2px; background: #e67e22"></div>
+            <span>RELATED_TO</span>
+          </div>
+          <div class="legend-item">
+            <div style="width: 20px; height: 2px; background: #9b59b6"></div>
+            <span>CORRELATE</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="difference-summary" id="differenceSummary">
+        <h3>Schema Differences</h3>
+        <div id="diffContent">Loading comparison...</div>
+      </div>
+
+      <div class="graphs-container">
+        <div class="graph-panel">
+          <div class="graph-header">Original Schema</div>
+          <div class="graph-stats" id="originalStats">Loading...</div>
+          <svg class="graph-svg" id="originalGraph" width="850" height="600"></svg>
+        </div>
+
+        <div class="graph-panel">
+          <div class="graph-header">Consolidated Schema</div>
+          <div class="graph-stats" id="consolidatedStats">Loading...</div>
+          <svg class="graph-svg" id="consolidatedGraph" width="850" height="600"></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="tooltip" id="tooltip" style="display: none"></div>
+
+    <script>
+      // Configuration
+      const config = {
+        nodeSize: 8,
+        linkDistance: 20,
+        charge: -50,
+        showLabels: true,
+        nodeFilter: "all",
+        collisionRadius: 10,
+      };
+
+      // Data storage
+      let originalData = null;
+      let consolidatedData = null;
+      let originalSimulation = null;
+      let consolidatedSimulation = null;
+
+      // Color mapping for node types
+      const nodeColors = {
+        Entity: "#3498db",
+        Property: "#2ecc71",
+        Knowledge: "#e74c3c",
+      };
+
+      // Link color mapping
+      const linkColors = {
+        HAS_PROPERTY: "#bdc3c7",
+        RELATED_TO: "#e67e22",
+        CORRELATE: "#9b59b6",
+      };
+
+      // Load schema data
+      async function loadSchemaData() {
+        try {
+          const [originalResponse, consolidatedResponse] = await Promise.all([
+            fetch("/src/reference/schema_graph_original.json"),
+            fetch("/src/reference/schema_graph_consolidated.json"),
+          ]);
+
+          originalData = await originalResponse.json();
+          consolidatedData = await consolidatedResponse.json();
+
+          console.log(
+            "Original schema loaded:",
+            originalData.nodes.length,
+            "nodes,",
+            originalData.edges.length,
+            "edges"
+          );
+          console.log(
+            "Consolidated schema loaded:",
+            consolidatedData.nodes.length,
+            "nodes,",
+            consolidatedData.edges.length,
+            "edges"
+          );
+
+          updateStats();
+          generateDifferenceSummary();
+          initializeGraphs();
+        } catch (error) {
+          console.error("Error loading schema data:", error);
+          document.getElementById(
+            "diffContent"
+          ).innerHTML = `<div class="diff-item" style="background: #f8d7da;">
+                        <strong>Error loading schema files:</strong><br>
+                        ${error.message}<br><br>
+                        <strong>Solutions:</strong><br>
+                        • Use the web server: <code>node utils/serve-comparison.js</code><br>
+                        • Check that schema files exist in <code>src/reference/</code><br>
+                        • Make sure you're running from the project root directory
+                    </div>`;
+        }
+      }
+
+      // Update statistics
+      function updateStats() {
+        const originalStats = analyzeSchema(originalData);
+        const consolidatedStats = analyzeSchema(consolidatedData);
+
+        document.getElementById(
+          "originalStats"
+        ).innerHTML = `Nodes: ${originalStats.totalNodes} (${originalStats.entities} entities, ${originalStats.properties} properties, ${originalStats.knowledge} knowledge) | Edges: ${originalStats.totalEdges}`;
+
+        document.getElementById(
+          "consolidatedStats"
+        ).innerHTML = `Nodes: ${consolidatedStats.totalNodes} (${consolidatedStats.entities} entities, ${consolidatedStats.properties} properties, ${consolidatedStats.knowledge} knowledge) | Edges: ${consolidatedStats.totalEdges}`;
+      }
+
+      // Analyze schema structure
+      function analyzeSchema(data) {
+        const nodesByKind = data.nodes.reduce((acc, node) => {
+          acc[node.kind] = (acc[node.kind] || 0) + 1;
+          return acc;
+        }, {});
+
+        return {
+          totalNodes: data.nodes.length,
+          totalEdges: data.edges.length,
+          entities: nodesByKind.Entity || 0,
+          properties: nodesByKind.Property || 0,
+          knowledge: nodesByKind.Knowledge || 0,
+        };
+      }
+
+      // Generate difference summary
+      function generateDifferenceSummary() {
+        const originalNodeIds = new Set(originalData.nodes.map(n => n.id));
+        const consolidatedNodeIds = new Set(consolidatedData.nodes.map(n => n.id));
+
+        const addedNodes = consolidatedData.nodes.filter(n => !originalNodeIds.has(n.id));
+        const removedNodes = originalData.nodes.filter(n => !consolidatedNodeIds.has(n.id));
+
+        const originalEdgeIds = new Set(
+          originalData.edges.map(e => `${e.from}-${e.to}-${e.label}`)
+        );
+        const consolidatedEdgeIds = new Set(
+          consolidatedData.edges.map(e => `${e.from}-${e.to}-${e.label}`)
+        );
+
+        const addedEdges = consolidatedData.edges.filter(
+          e => !originalEdgeIds.has(`${e.from}-${e.to}-${e.label}`)
+        );
+        const removedEdges = originalData.edges.filter(
+          e => !consolidatedEdgeIds.has(`${e.from}-${e.to}-${e.label}`)
+        );
+
+        let diffHtml = "";
+
+        if (addedNodes.length > 0) {
+          diffHtml += `<div class="diff-added"><strong>Added Nodes (${addedNodes.length}):</strong><br>`;
+          addedNodes.slice(0, 10).forEach(node => {
+            const info = node.kind === "Knowledge" ? ` - "${node.data}"` : "";
+            diffHtml += `• ${node.id} (${node.kind})${info}<br>`;
+          });
+          if (addedNodes.length > 10) diffHtml += `... and ${addedNodes.length - 10} more<br>`;
+          diffHtml += "</div>";
+        }
+
+        if (removedNodes.length > 0) {
+          diffHtml += `<div class="diff-removed"><strong>Removed Nodes (${removedNodes.length}):</strong><br>`;
+          removedNodes.slice(0, 10).forEach(node => {
+            diffHtml += `• ${node.id} (${node.kind})<br>`;
+          });
+          if (removedNodes.length > 10) diffHtml += `... and ${removedNodes.length - 10} more<br>`;
+          diffHtml += "</div>";
+        }
+
+        if (addedEdges.length > 0) {
+          diffHtml += `<div class="diff-added"><strong>Added Edges (${addedEdges.length}):</strong><br>`;
+          addedEdges.slice(0, 10).forEach(edge => {
+            diffHtml += `• ${edge.from} → ${edge.to} (${edge.label})<br>`;
+          });
+          if (addedEdges.length > 10) diffHtml += `... and ${addedEdges.length - 10} more<br>`;
+          diffHtml += "</div>";
+        }
+
+        if (removedEdges.length > 0) {
+          diffHtml += `<div class="diff-removed"><strong>Removed Edges (${removedEdges.length}):</strong><br>`;
+          removedEdges.slice(0, 10).forEach(edge => {
+            diffHtml += `• ${edge.from} → ${edge.to} (${edge.label})<br>`;
+          });
+          if (removedEdges.length > 10) diffHtml += `... and ${removedEdges.length - 10} more<br>`;
+          diffHtml += "</div>";
+        }
+
+        if (!diffHtml) {
+          diffHtml = '<div class="diff-item">No differences found between schemas.</div>';
+        }
+
+        document.getElementById("diffContent").innerHTML = diffHtml;
+      }
+
+      // Validate and clean data
+      function validateData(data) {
+        // Clean nodes - remove any with missing/invalid IDs
+        const cleanNodes = data.nodes.filter(node => {
+          if (!node || !node.id || node.id === undefined || node.id === null || node.id === "") {
+            console.warn(`Removing invalid node:`, node);
+            return false;
+          }
+          return true;
+        });
+
+        const nodeIds = new Set(cleanNodes.map(n => n.id));
+
+        // Clean edges - remove any with missing/invalid from/to or nodes that don't exist
+        const validEdges = data.edges.filter(edge => {
+          // Check for missing or invalid edge properties
+          if (
+            !edge ||
+            !edge.from ||
+            !edge.to ||
+            edge.from === undefined ||
+            edge.from === null ||
+            edge.from === "" ||
+            edge.to === undefined ||
+            edge.to === null ||
+            edge.to === ""
+          ) {
+            console.warn(`Removing invalid edge with missing properties:`, edge);
+            return false;
+          }
+
+          const hasFrom = nodeIds.has(edge.from);
+          const hasTo = nodeIds.has(edge.to);
+
+          if (!hasFrom || !hasTo) {
+            console.warn(
+              `Invalid edge: ${edge.from} -> ${edge.to} (from: ${hasFrom}, to: ${hasTo})`
+            );
+            return false;
+          }
+          return true;
+        });
+
+        console.log(
+          `Data validation: ${data.nodes.length} -> ${cleanNodes.length} nodes, ${data.edges.length} -> ${validEdges.length} edges`
+        );
+
+        return {
+          nodes: cleanNodes,
+          edges: validEdges,
+        };
+      }
+
+      // Filter data based on current filter settings
+      function filterData(data) {
+        // First validate the data
+        const cleanData = validateData(data);
+
+        if (config.nodeFilter === "all") {
+          return cleanData;
+        }
+
+        const filteredNodes = cleanData.nodes.filter(node => node.kind === config.nodeFilter);
+        const nodeIds = new Set(filteredNodes.map(n => n.id));
+        const filteredEdges = cleanData.edges.filter(
+          edge => nodeIds.has(edge.from) && nodeIds.has(edge.to)
+        );
+
+        return {
+          nodes: filteredNodes,
+          edges: filteredEdges,
+        };
+      }
+
+      // Create force directed graph
+      function createGraph(svgId, data, isOriginal = true) {
+        try {
+          const svg = d3.select(`#${svgId}`);
+          const width = +svg.attr("width");
+          const height = +svg.attr("height");
+
+          // Clear existing content
+          svg.selectAll("*").remove();
+
+          // Add zoom and pan behavior
+          const zoom = d3.zoom()
+            .scaleExtent([0.1, 4])
+            .on("zoom", (event) => {
+              container.attr("transform", event.transform);
+            });
+
+          svg.call(zoom);
+
+          // Create main container for zoom/pan
+          const container = svg.append("g");
+
+          // Filter data
+          const filteredData = filterData(data);
+
+          console.log(
+            `Creating ${isOriginal ? "original" : "consolidated"} graph:`,
+            `${filteredData.nodes.length} nodes, ${filteredData.edges.length} edges`
+          );
+
+          // Debug: Check for problematic nodes
+          filteredData.nodes.forEach((node, i) => {
+            if (!node.id || node.id === undefined || node.id === null) {
+              console.error(`Found problematic node at index ${i}:`, node);
+            }
+          });
+
+          // Debug: Check first few edges for reference
+          console.log(`Sample edges:`, filteredData.edges.slice(0, 3));
+
+          // Validate we have data
+          if (filteredData.nodes.length === 0) {
+            console.warn(`No nodes to display for ${svgId}`);
+            return;
+          }
+
+          // Final safety check: ensure all nodes have valid IDs
+          const safeNodes = filteredData.nodes.filter(node => {
+            const isValid =
+              node && node.id && node.id !== undefined && node.id !== null && node.id !== "";
+            if (!isValid) {
+              console.error("Removing invalid node before D3:", node);
+            }
+            return isValid;
+          });
+
+          // Double-check edges before creating D3 simulation
+          const nodeIdSet = new Set(safeNodes.map(n => n.id));
+          let finalEdges = filteredData.edges.filter(edge => {
+            const valid = nodeIdSet.has(edge.from) && nodeIdSet.has(edge.to);
+            if (!valid) {
+              console.error(`D3 Pre-check: Invalid edge found: ${edge.from} -> ${edge.to}`);
+            }
+            return valid;
+          });
+
+          console.log(
+            `D3 Final check: ${filteredData.nodes.length} -> ${safeNodes.length} nodes, ${filteredData.edges.length} -> ${finalEdges.length} edges`
+          );
+
+          // Try a more cautious approach - create simulation step by step
+          console.log("Creating D3 simulation...");
+          const simulation = d3.forceSimulation(safeNodes);
+
+          console.log("Adding forces...");
+          simulation
+            .force("charge", d3.forceManyBody().strength(config.charge))
+            .force("center", d3.forceCenter(width / 2, height / 2))
+            .force("collision", d3.forceCollide().radius(config.collisionRadius));
+
+          // Add link force last with extensive debugging
+          console.log("Adding link force with", finalEdges.length, "edges...");
+          console.log(
+            "Sample nodes for ID check:",
+            safeNodes.slice(0, 3).map(n => ({ id: n.id, type: typeof n.id }))
+          );
+          console.log(
+            "Sample edges for link check:",
+            finalEdges.slice(0, 3).map(e => ({
+              from: e.from,
+              to: e.to,
+              fromType: typeof e.from,
+              toType: typeof e.to,
+            }))
+          );
+
+          try {
+            // Create a copy of edges that D3 can safely modify
+            const edgesForD3 = finalEdges.map(edge => ({
+              source: edge.from,  // D3 expects 'source' and 'target'
+              target: edge.to,
+              ...edge  // Keep original properties
+            }));
+            
+            console.log('Creating D3-compatible edges:', edgesForD3.slice(0, 3));
+            
+            const linkForce = d3
+              .forceLink(edgesForD3)
+              .id(d => {
+                // D3 calls this function for each node to get its ID
+                if (!d) {
+                  console.error("D3 ID accessor: node is null/undefined:", d);
+                  return "";
+                }
+                if (!d.hasOwnProperty("id")) {
+                  console.error("D3 ID accessor: node missing id property:", d);
+                  return "";
+                }
+                const id = d.id;
+                if (!id || id === undefined || id === null || id === "") {
+                  console.error("D3 ID accessor: invalid ID value:", {
+                    node: d,
+                    id: id,
+                    type: typeof id,
+                  });
+                  return "";
+                }
+                return String(id); // Ensure it's a string
+              })
+              .distance(config.linkDistance);
+
+            simulation.force("link", linkForce);
+            console.log("Link force added successfully");
+            
+            // Update finalEdges to use the D3-compatible version for rendering
+            finalEdges = edgesForD3;
+            
+          } catch (linkError) {
+            console.error("Failed to add link force:", linkError);
+            console.error("Link error details:", {
+              message: linkError.message,
+              stack: linkError.stack,
+              nodeCount: safeNodes.length,
+              edgeCount: finalEdges.length,
+            });
+            // Continue without links if there's an issue
+            console.log("Continuing without link force...");
+          }
+
+          // Store simulation reference
+          if (isOriginal) {
+            originalSimulation = simulation;
+          } else {
+            consolidatedSimulation = simulation;
+          }
+
+          // Create links - use empty array if finalEdges is problematic
+          let edgesForRendering = finalEdges;
+          try {
+            // Test if edges are valid for D3
+            edgesForRendering.forEach(edge => {
+              if (!edge.from || !edge.to) {
+                throw new Error(`Invalid edge for rendering: ${JSON.stringify(edge)}`);
+              }
+            });
+            console.log(`Using ${edgesForRendering.length} edges for rendering`);
+          } catch (renderError) {
+            console.error("Edges invalid for rendering:", renderError);
+            edgesForRendering = []; // Render without edges
+          }
+
+          const link = container
+            .append("g")
+            .selectAll("line")
+            .data(edgesForRendering)
+            .join("line")
+            .attr("class", d => `link ${d.label.toLowerCase().replace("_", "-")}`)
+            .attr("stroke", d => linkColors[d.label] || "#95a5a6")
+            .attr("stroke-width", d => (d.label === "HAS_PROPERTY" ? 1 : 2));
+
+          // Create nodes
+          const node = container
+            .append("g")
+            .selectAll("circle")
+            .data(safeNodes)
+            .join("circle")
+            .attr("class", d => `node ${d.kind.toLowerCase()}`)
+            .attr("r", config.nodeSize)
+            .attr("fill", d => nodeColors[d.kind] || "#95a5a6")
+            .call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
+
+          // Create labels
+          const labels = container
+            .append("g")
+            .selectAll("text")
+            .data(safeNodes)
+            .join("text")
+            .attr("class", "node-label")
+            .text(d => {
+              if (!config.showLabels) return "";
+              if (d.kind === "Knowledge") return d.id;
+              if (d.id.includes(".")) return d.id.split(".").pop();
+              return d.id;
+            })
+            .attr("dy", config.nodeSize + 12);
+
+          // Tooltip
+          const tooltip = d3.select("#tooltip");
+
+          node
+            .on("mouseover", function (event, d) {
+              d3.select(this).classed("highlighted", true);
+
+              let content = `<strong>${d.id}</strong><br>Type: ${d.kind}`;
+              if (d.datatype) content += `<br>Data Type: ${d.datatype}`;
+              if (d.data) content += `<br>Knowledge: ${d.data}`;
+              if (d.entities) content += `<br>Related Entities: ${d.entities.join(", ")}`;
+              if (d.properties) content += `<br>Related Properties: ${d.properties.join(", ")}`;
+
+              tooltip
+                .style("display", "block")
+                .html(content)
+                .style("left", event.pageX + 10 + "px")
+                .style("top", event.pageY - 10 + "px");
+            })
+            .on("mouseout", function (d) {
+              d3.select(this).classed("highlighted", false);
+              tooltip.style("display", "none");
+            });
+
+          // Update positions on tick - with safety checks
+          simulation.on("tick", () => {
+            // Only update links if they exist and have valid source/target
+            if (link && edgesForRendering.length > 0) {
+              try {
+                link
+                  .attr("x1", d => d.source?.x || 0)
+                  .attr("y1", d => d.source?.y || 0)
+                  .attr("x2", d => d.target?.x || 0)
+                  .attr("y2", d => d.target?.y || 0);
+              } catch (linkUpdateError) {
+                console.warn("Error updating links:", linkUpdateError);
+              }
+            }
+
+            // Update nodes - these should always work
+            if (node) {
+              node.attr("cx", d => d.x || 0).attr("cy", d => d.y || 0);
+            }
+
+            // Update labels
+            if (labels) {
+              labels.attr("x", d => d.x || 0).attr("y", d => d.y || 0);
+            }
+          });
+
+          // Drag functions
+          function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+          }
+
+          function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+          }
+
+          function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+          }
+        } catch (error) {
+          console.error(`Error creating graph for ${svgId}:`, error);
+          const svg = d3.select(`#${svgId}`);
+          svg.selectAll("*").remove();
+          svg
+            .append("text")
+            .attr("x", +svg.attr("width") / 2)
+            .attr("y", +svg.attr("height") / 2)
+            .attr("text-anchor", "middle")
+            .attr("fill", "#e74c3c")
+            .text(`Error loading graph: ${error.message}`);
+        }
+      }
+
+      // Initialize both graphs
+      function initializeGraphs() {
+        createGraph("originalGraph", originalData, true);
+        createGraph("consolidatedGraph", consolidatedData, false);
+        setupControls();
+      }
+
+      // Refresh both graphs
+      function refreshGraphs() {
+        createGraph("originalGraph", originalData, true);
+        createGraph("consolidatedGraph", consolidatedData, false);
+      }
+
+      // Setup control event listeners
+      function setupControls() {
+        // Node size control
+        const nodeSizeSlider = document.getElementById("nodeSize");
+        const nodeSizeValue = document.getElementById("nodeSizeValue");
+        nodeSizeSlider.addEventListener("input", function () {
+          config.nodeSize = +this.value;
+          nodeSizeValue.textContent = this.value;
+          refreshGraphs();
+        });
+
+        // Link distance control
+        const linkDistanceSlider = document.getElementById("linkDistance");
+        const linkDistanceValue = document.getElementById("linkDistanceValue");
+        linkDistanceSlider.addEventListener("input", function () {
+          config.linkDistance = +this.value;
+          linkDistanceValue.textContent = this.value;
+          refreshGraphs();
+        });
+
+        // Show labels toggle
+        const showLabelsCheckbox = document.getElementById("showLabels");
+        showLabelsCheckbox.addEventListener("change", function () {
+          config.showLabels = this.checked;
+          refreshGraphs();
+        });
+
+        // Node filter
+        const nodeFilterSelect = document.getElementById("nodeFilter");
+        nodeFilterSelect.addEventListener("change", function () {
+          config.nodeFilter = this.value;
+          refreshGraphs();
+        });
+
+        // Charge strength control
+        const chargeStrengthSlider = document.getElementById("chargeStrength");
+        const chargeStrengthValue = document.getElementById("chargeStrengthValue");
+        chargeStrengthSlider.addEventListener("input", function () {
+          config.charge = +this.value;
+          chargeStrengthValue.textContent = this.value;
+          refreshGraphs();
+        });
+
+        // Collision radius control
+        const collisionRadiusSlider = document.getElementById("collisionRadius");
+        const collisionRadiusValue = document.getElementById("collisionRadiusValue");
+        collisionRadiusSlider.addEventListener("input", function () {
+          config.collisionRadius = +this.value;
+          collisionRadiusValue.textContent = this.value;
+          refreshGraphs();
+        });
+      }
+
+      // Initialize application
+      loadSchemaData();
+    </script>
+  </body>
+</html>
